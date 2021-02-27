@@ -1,5 +1,5 @@
 {
-  "name": "vef2-2021-v2-synilausn",
+  "name": "vef2-2021-v3",
   "version": "1.0.0",
   "description": "",
   "main": "./src/app.js",
@@ -7,13 +7,14 @@
     "node": ">= 14"
   },
   "scripts": {
+    "sass": "node-sass --source-map-embed styles/styles.scss -o public/css ",
     "dev": "nodemon ./src/app.js",
     "test": "eslint ./src",
     "start": "node ./src/app.js",
     "setup": "node ./src/setup.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Óskar Helgi Berenguer",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.0.0",
@@ -23,9 +24,12 @@
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "express-validator": "^6.9.2",
+    "node-sass": "^5.0.0",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
     "pg": "^8.5.1",
+    "sass": "^1.32.8",
+    "utf8": "^3.0.0",
     "xss": "^1.0.8"
   },
   "devDependencies": {
