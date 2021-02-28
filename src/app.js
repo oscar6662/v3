@@ -7,7 +7,7 @@ const pool = require('./db');
 const reg = require('./registration');
 const passport = require('passport');
 const Strategy = require('passport-local').Strategy;
-const lib = require('./users');
+const lib = require('./login');
 const { CLIEngine } = require('eslint');
 const sessionSecret = 'leyndarmál';
 const session = require('express-session');
@@ -41,20 +41,7 @@ app.use((req, res, next) => {
   next();
 });
 
-passport.use(new Strategy(strat));
 
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
-
-passport.deserializeUser(async (id, done) => {
-  try {
-    const user = await lib.findById(id);
-    done(null, user);
-  } catch (err) {
-    done(err);
-  }
-});
 
 app.get('/', async (req, res) => {
   try {
@@ -66,29 +53,6 @@ app.get('/', async (req, res) => {
     console.error(err.message);
   }
 });
-
-async function strat(username, password, done) {
-  try {
-    const user = await lib.findByUsername(username);
-    if (!user) {
-      return done(null, false);
-    }
-    const result = await lib.comparePasswords(password, user);
-    console.log(result);
-    return done(null, result);
-  } catch (err) {
-    console.error(err);
-    return done(err);
-  }
-}
-
-function ensureLoggedIn(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-
-  return res.redirect('/login');
-}
 
 app.post('/', async (req, res) => {
   try {
@@ -105,12 +69,14 @@ app.post('/', async (req, res) => {
     console.error(err.message);
   }
 });
-app.get('/admin', ensureLoggedIn, (req, res) => {
+
+app.get('/admin', lib.ensureLoggedIn, (req, res) => {
   res.send(`
-    <p>Hér eru leyndarmál</p>
+    <p>You have been logged in</p>
     <p><a href="/">Forsíða</a></p>
   `);
 });
+
 app.get('/logout', (req, res) => {
   // logout hendir session cookie og session
   req.logout();
@@ -125,8 +91,8 @@ app.post(
     failureMessage: 'Notandanafn eða lykilorð vitlaust.',
     failureRedirect: '/login',
   }),
-
   (req, res) => {
+    console.log(req.user.admin);
     res.redirect('/admin');
   },
 );
