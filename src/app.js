@@ -8,7 +8,6 @@ const reg = require('./registration');
 const passport = require('passport');
 const Strategy = require('passport-local').Strategy;
 const lib = require('./login');
-const { CLIEngine } = require('eslint');
 const sessionSecret = 'leyndarmál';
 const session = require('express-session');
 
