@@ -13,69 +13,10 @@
             <h1>Undirskriftarlisti</h1>
           </div>
           <div>
-            <form class="input-form grid col-6" method="POST" action="">
-              <label class="row">
-                  <p class="col-2">Nafn*</p>
-                  <input class="col-8 highlite-<%=errors[0]%> inputt" type="text" name="name">
-              </label>
-              <label class="row">
-                  <p class="col-2">Kennitala*</p>
-                  <input class="col-8 highlite-<%=errors[1]%>  highlite-<%=errors[2]%>" type="text" name="kennitala">
-              </label>
-              <label class="row">
-                  <p class="col-2">Athugasemd:</p>
-                  <textarea class="col-8 text-area" type="text" name="athugasemd"></textarea>
-              </label>
-              <label class="row check-box">
-                <input type="checkbox" name="check">
-                <p> Ekki birta nafn á lista</p>
-              </label>
-              <label>
-                <%  if(errors[0]){%>
-                <p><%= "Nafn má ekki vera tómt" %></p>
-                <%}%>
-                <%  if(errors[1]){%>
-                <p><%= "Kennitala má ekki vera tómt" %></p>
-                <%}%>
-                <%  if(errors[2]){%>
-                <p><%= "Kennitala verður að vera á formi 000000-0000 eða 0000000000" %></p>
-                <%}%>
-              </label>
-              <div class="form-submit">
-                <input class = "inputs" type="submit" value="Skrifa undir">
-              </div>
-              
-            </form>
+            <%- include('form') -%>
           </div>
         </div>
-        <div class="row grid rect"></div>
-        <div class="data grid col-6">
-          <h1>Undirskriftir</h1>
-            <Fragment>
-                <table class="">
-                  <thead>
-                    <tr>
-                      <th class="col-1">Dags</th>
-                      <th class="col-1">Nafn</th>
-                      <th class="col-4">Athugasemd</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <% for(let i = 0; i < data.length; i++){%>
-                    <tr>
-                      <td><%=data[i].signed.toISOString().replace(/T.*/,'').split('-').reverse().join('.')%></td>
-                      <%if(data[i].anonymous){%>
-                      <td>anonymous</td>
-                      <%}else{%>
-                      <td><%= data[i].name %></td>
-                      <%}%>
-                      <td><%=data[i].comment%></td>
-                    </tr>
-                   <% } %>
-                  </tbody>
-                </table>
-              </Fragment>
-        </div>
+        <%- include('list') -%>
     </main>
 </body>
 </html>

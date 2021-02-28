@@ -1,2 +1,28 @@
-
-
+<div class="row grid rect"></div>
+<div class="data grid col-6">
+  <h1>Undirskriftir</h1>
+    <Fragment>
+        <table class="">
+          <thead>
+            <tr>
+              <th class="col-1">Dags</th>
+              <th class="col-1">Nafn</th>
+              <th class="col-4">Athugasemd</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for(let i = 0; i < data.length; i++){%>
+            <tr>
+              <td><%=data[i].signed.toISOString().replace(/T.*/,'').split('-').reverse().join('.')%></td>
+              <%if(data[i].anonymous){%>
+              <td>anonymous</td>
+              <%}else{%>
+              <td><%= data[i].name %></td>
+              <%}%>
+              <td><%=data[i].comment%></td>
+            </tr>
+           <% } %>
+          </tbody>
+        </table>
+      </Fragment>
+</div>

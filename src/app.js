@@ -8,6 +8,7 @@ const reg = require('./registration');
 const passport = require('passport');
 const Strategy = require('passport-local').Strategy;
 const lib = require('./login');
+const { CLIEngine } = require('eslint');
 const sessionSecret = 'leyndarmál';
 const session = require('express-session');
 
@@ -45,7 +46,7 @@ app.use((req, res, next) => {
 app.get('/', async (req, res) => {
   try {
     const errors = [false, false, false, false];
-    const allSignatures = await pool.query('SELECT * FROM signatures');
+    const allSignatures = await pool.select('SELECT * FROM signatures');
     utf8.decode(allSignatures);
     res.render('index', { data: allSignatures.rows, errors });
   } catch (err) {
@@ -60,7 +61,7 @@ app.post('/', async (req, res) => {
     if (possibleerrors[3] && !possibleerrors[0] && !possibleerrors[1] && !possibleerrors[2]) {
       res.render('regerrors');
     } else {
-      const allSignatures = await pool.query('SELECT * FROM signatures');
+      const allSignatures = await pool.select('SELECT * FROM signatures');
       utf8.decode(allSignatures);
       res.render('index', { data: allSignatures.rows, errors: possibleerrors });
     }
