@@ -10,6 +10,9 @@
   <header>
     <div class = "grid row login">
       <% if(loggedIn){ %>
+        <% if(admin){ %>
+        <h3>Logged in as Admin</h3>
+        <% } %>
         <p><a href="/logout">Logout</a></p>
       <% }else{ %>
         <div class =""><p><a href="/login">Login</a></p></div>

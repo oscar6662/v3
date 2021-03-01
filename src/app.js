@@ -1,26 +1,23 @@
-let express = require('express');
-let path = require('path');
-let bodyParser = require('body-parser');
-let dotenv = require('dotenv');
-let utf8 = require('utf8');
-let pool = require('./db');
-let ad = require('./admin');
-let reg = require('./registration');
-let passport = require('passport');
-let Strategy = require('passport-local').Strategy;
-let lib = require('./login');
-let sessionSecret = 'leyndarmál';
-let session = require('express-session');
-const { kStringMaxLength } = require('buffer');
+const express = require('express');
+const path = require('path');
+const bodyParser = require('body-parser');
+const dotenv = require('dotenv');
+const passport = require('passport');
+const session = require('express-session');
+const list = require('./list');
+const ad = require('./admin');
+const reg = require('./registration');
+const lib = require('./login');
+
+const sessionSecret = 'leyndarmál';
 
 dotenv.config();
+const app = express();
+const errors = [false, false, false, false];
 
-let {
+const {
   PORT: port = 3000,
 } = process.env;
-
-let app = express();
-let errors = [false, false, false, false];
 
 app.use(session({
   secret: sessionSecret,
@@ -43,43 +40,26 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/', async (req, res) => {
-  
-  render(req,res,errors);
-});
-
-async function render(req,res,errors){
-  try {
-    if(req.query.page == null) req.query.page = 1;
-    if(req.user == null) admin = false;
-    else admin = req.user.admin;
-    let n = await pool.select('SELECT COUNT(*) AS count FROM signatures;');
-    let pages = Math.ceil(n.rows[0].count/50);
-    let allSignatures = await pool.insert('SELECT * FROM signatures LIMIT 50 OFFSET $1;',[(req.query.page-1)*50] );
-    res.render('index', { data: allSignatures.rows, errors, page: req.query.page, pages, admin, n:n.rows[0].count, loggedIn:req.isAuthenticated()});
-  } catch (err) {
-    console.error(err.message);
-  }
-}
+app.get('/', async (req, res) => { list.render(req, res, errors); });
 
 app.post('/', async (req, res) => {
   try {
-    let usrdata = req.body;
-    if(typeof usrdata.id !== 'undefined'){
+    const usrdata = req.body;
+    if (typeof usrdata.id !== 'undefined') {
       if (!req.isAuthenticated()) {
-        return res.redirect('/login');
+        res.redirect('/login');
+        return;
       }
       await ad.del(usrdata.id);
-      await render(req,res,errors);
-    } 
-    else{
-      let possibleerrors = await reg.register(usrdata);
-      if (possibleerrors[3] && !possibleerrors[0] && !possibleerrors[1] && !possibleerrors[2]) {
-        res.render('dupeId');
-      } else {
-        render(req,res,possibleerrors);
-      }
+      await list.render(req, res, errors);
+      return;
     }
+    const possibleerrors = await reg.register(usrdata);
+    if (possibleerrors[3] && !possibleerrors[0] && !possibleerrors[1] && !possibleerrors[2]) {
+      res.render('dupeId');
+      return;
+    }
+    list.render(req, res, possibleerrors);
   } catch (err) {
     console.error(err.message);
   }
@@ -87,7 +67,7 @@ app.post('/', async (req, res) => {
 
 app.get('/admin', lib.ensureLoggedIn, async (req, res) => {
   try {
-    res.render('admin', {loggedIn:req.isAuthenticated()} );
+    res.render('admin', { loggedIn: req.isAuthenticated(), admin: req.user.admin });
   } catch (err) {
     console.error(err.message);
   }
@@ -106,7 +86,6 @@ app.post(
     failureRedirect: '/login',
   }),
   (req, res) => {
-    
     res.redirect('/admin');
   },
 );
@@ -116,7 +95,7 @@ app.get('/login', (req, res) => {
     return res.redirect('/');
   }
 
-  res.render('login');
+  return res.render('login');
 });
 
 app.get('*', (req, res) => {

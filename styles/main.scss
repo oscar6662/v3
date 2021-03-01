@@ -27,6 +27,13 @@ header{
   p:hover{
     background-color: rgb(240, 221, 195);
   }
+  h3{
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 12px;
+    margin-right: 0.5rem;
+    padding:9px;
+    font-weight: 560;
+  }
 }
 
 .input {
@@ -127,7 +134,6 @@ header{
   .delete-button:hover{
     background-color: whitesmoke;
   }
-
 }
 
 .highlite-true {

@@ -40,4 +40,4 @@ async function select(_query) {
   }
 }
 
-module.exports = {pool, insert, select};
+module.exports = { pool, insert, select };

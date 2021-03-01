@@ -6,5 +6,5 @@
 * run "npm run setup" to create the table
 * run "npm run start" to start the web on PORT 3000
 * run "npm run test" to check I didn't make (hopefully) any mistakes
-* You can find a sample of the working page https://undirskriftarlista.herokuapp.com
+* You can find a sample of the working page https://undirskriftarlista-v2.herokuapp.com
 

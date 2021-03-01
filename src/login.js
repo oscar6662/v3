@@ -1,9 +1,6 @@
 const passport = require('passport');
-const Strategy = require('passport-local').Strategy;
+const { Strategy } = require('passport-local');
 const lib = require('./users');
-
-
-passport.use(new Strategy(strat));
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -36,10 +33,9 @@ function ensureLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {
     return next();
   }
-
   return res.redirect('/login');
 }
 
-
+passport.use(new Strategy(strat));
 
 module.exports = { ensureLoggedIn, strat };
