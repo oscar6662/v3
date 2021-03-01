@@ -67,8 +67,11 @@ app.post('/', async (req, res) => {
   try {
     let usrdata = req.body;
     if(typeof usrdata.id !== 'undefined'){
-      if(req.isAuthenticated) await ad.del(usrdata.id);
-      else res.redirect('/login');
+      if (!req.isAuthenticated()) {
+        console.log(req.isAuthenticated());
+        return res.redirect('/login');
+      }
+      await ad.del(usrdata.id);
       await render(req,res,errors);
     } 
     else{
