@@ -11,7 +11,6 @@ let Strategy = require('passport-local').Strategy;
 let lib = require('./login');
 let sessionSecret = 'leyndarmál';
 let session = require('express-session');
-let { CLIEngine } = require('eslint');
 const { kStringMaxLength } = require('buffer');
 
 dotenv.config();
@@ -68,7 +67,6 @@ app.post('/', async (req, res) => {
     let usrdata = req.body;
     if(typeof usrdata.id !== 'undefined'){
       if (!req.isAuthenticated()) {
-        console.log(req.isAuthenticated());
         return res.redirect('/login');
       }
       await ad.del(usrdata.id);
