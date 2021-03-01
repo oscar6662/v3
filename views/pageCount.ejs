@@ -1,0 +1,22 @@
+<footer>
+  <div class="">
+      <div class="rect row grid"></div>
+      <div class="pages">
+        
+        <% if(parseInt(page)-1 !== 0){%>
+          <p><a href="/?page=<%= parseInt(page)-1 %>">Fyrri Síða</a></p>
+        <%}else{%>
+          <p></p>
+        <%}%>
+        
+        <p>Síða <%= page %> af <%= pages %></p>
+
+        <% if(parseInt(page) !== pages){%>
+          <p><a href="/?page=<%= parseInt(page)+1 %>">Næsta Síða</a></p>
+        <%}else{%>
+          <p></p>
+        <%}%>
+        
+      </div>
+</div>
+</footer>

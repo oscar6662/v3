@@ -5,7 +5,7 @@ function name(n) {
 }
 
 async function duplicateId(id) {
-  const exists = await pool.query(
+  const exists = await pool.pool.query(
     'SELECT id from signatures WHERE nationalid = $1',
     [id],
   );
@@ -40,7 +40,7 @@ async function register(usrdata) {
   }
   if (err > 0) return errors;
   const id = formatid(usrdata.kennitala);
-  pool.query(
+  pool.pool.query(
     'INSERT INTO signatures(name, nationalid, comment, anonymous) VALUES($1, $2, $3, $4) RETURNING *',
     [usrdata.name, id, usrdata.athugasemd, check],
   );

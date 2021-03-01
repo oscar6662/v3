@@ -1,23 +1,27 @@
-const express = require('express');
-const path = require('path');
-const bodyParser = require('body-parser');
-const dotenv = require('dotenv');
-const utf8 = require('utf8');
-const pool = require('./db');
-const reg = require('./registration');
-const passport = require('passport');
-const Strategy = require('passport-local').Strategy;
-const lib = require('./login');
-const sessionSecret = 'leyndarmál';
-const session = require('express-session');
+let express = require('express');
+let path = require('path');
+let bodyParser = require('body-parser');
+let dotenv = require('dotenv');
+let utf8 = require('utf8');
+let pool = require('./db');
+let ad = require('./admin');
+let reg = require('./registration');
+let passport = require('passport');
+let Strategy = require('passport-local').Strategy;
+let lib = require('./login');
+let sessionSecret = 'leyndarmál';
+let session = require('express-session');
+let { CLIEngine } = require('eslint');
+const { kStringMaxLength } = require('buffer');
 
 dotenv.config();
 
-const {
+let {
   PORT: port = 3000,
 } = process.env;
 
-const app = express();
+let app = express();
+let errors = [false, false, false, false];
 
 app.use(session({
   secret: sessionSecret,
@@ -40,44 +44,55 @@ app.use((req, res, next) => {
   next();
 });
 
-
-
 app.get('/', async (req, res) => {
+  
+  render(req,res,errors);
+});
+
+async function render(req,res,errors){
   try {
-    const errors = [false, false, false, false];
-    const allSignatures = await pool.select('SELECT * FROM signatures');
-    utf8.decode(allSignatures);
-    res.render('index', { data: allSignatures.rows, errors });
+    if(req.query.page == null) req.query.page = 1;
+    if(req.user == null) admin = false;
+    else admin = req.user.admin;
+    let n = await pool.select('SELECT COUNT(*) AS count FROM signatures;');
+    let pages = Math.ceil(n.rows[0].count/50);
+    let allSignatures = await pool.insert('SELECT * FROM signatures LIMIT 50 OFFSET $1;',[(req.query.page-1)*50] );
+    res.render('index', { data: allSignatures.rows, errors, page: req.query.page, pages, admin, n:n.rows[0].count, loggedIn:req.isAuthenticated()});
   } catch (err) {
     console.error(err.message);
   }
-});
+}
 
 app.post('/', async (req, res) => {
   try {
-    const usrdata = req.body;
-    const possibleerrors = await reg.register(usrdata);
-    if (possibleerrors[3] && !possibleerrors[0] && !possibleerrors[1] && !possibleerrors[2]) {
-      res.render('regerrors');
-    } else {
-      const allSignatures = await pool.select('SELECT * FROM signatures');
-      utf8.decode(allSignatures);
-      res.render('index', { data: allSignatures.rows, errors: possibleerrors });
+    let usrdata = req.body;
+    if(typeof usrdata.id !== 'undefined'){
+      if(req.isAuthenticated) await ad.del(usrdata.id);
+      else res.redirect('/login');
+      await render(req,res,errors);
+    } 
+    else{
+      let possibleerrors = await reg.register(usrdata);
+      if (possibleerrors[3] && !possibleerrors[0] && !possibleerrors[1] && !possibleerrors[2]) {
+        res.render('dupeId');
+      } else {
+        render(req,res,possibleerrors);
+      }
     }
   } catch (err) {
     console.error(err.message);
   }
 });
 
-app.get('/admin', lib.ensureLoggedIn, (req, res) => {
-  res.send(`
-    <p>You have been logged in</p>
-    <p><a href="/">Forsíða</a></p>
-  `);
+app.get('/admin', lib.ensureLoggedIn, async (req, res) => {
+  try {
+    res.render('admin', {loggedIn:req.isAuthenticated()} );
+  } catch (err) {
+    console.error(err.message);
+  }
 });
 
 app.get('/logout', (req, res) => {
-  // logout hendir session cookie og session
   req.logout();
   res.redirect('/');
 });
@@ -85,13 +100,12 @@ app.get('/logout', (req, res) => {
 app.post(
   '/login',
 
-  // Þetta notar strat að ofan til að skrá notanda inn
   passport.authenticate('local', {
     failureMessage: 'Notandanafn eða lykilorð vitlaust.',
     failureRedirect: '/login',
   }),
   (req, res) => {
-    console.log(req.user.admin);
+    
     res.redirect('/admin');
   },
 );
@@ -101,18 +115,7 @@ app.get('/login', (req, res) => {
     return res.redirect('/');
   }
 
-  let message = '';
-
-
-
-  return res.send(`
-    <form method="post" action="/login" autocomplete="off">
-      <label>Notendanafn: <input type="text" name="username"></label>
-      <label>Lykilorð: <input type="password" name="password"></label>
-      <button>Innskrá</button>
-    </form>
-    <p>${message}</p>
-  `);
+  res.render('login');
 });
 
 app.get('*', (req, res) => {

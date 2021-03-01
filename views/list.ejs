@@ -1,6 +1,7 @@
 <div class="row grid rect"></div>
 <div class="data grid col-6">
   <h1>Undirskriftir</h1>
+  <h3>Fjöldi undirskrifta: <%=n%></h3>
     <Fragment>
         <table class="">
           <thead>
@@ -8,6 +9,7 @@
               <th class="col-1">Dags</th>
               <th class="col-1">Nafn</th>
               <th class="col-4">Athugasemd</th>
+              <% if(admin){%> <th class="col-1">Eyða</th> <%}%>
             </tr>
           </thead>
           <tbody>
@@ -20,6 +22,7 @@
               <td><%= data[i].name %></td>
               <%}%>
               <td><%=data[i].comment%></td>
+              <% if(admin){%> <td class="col-1"><form method="POST" action=""> <input type="hidden"  name="id" value="<%=data[i].id%>"><input type="submit" value="Eiða"></form></td> <%}%>
             </tr>
            <% } %>
           </tbody>
