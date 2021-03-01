@@ -22,7 +22,7 @@
               <td><%= data[i].name %></td>
               <%}%>
               <td><%=data[i].comment%></td>
-              <% if(admin){%> <td class="col-1"><form method="POST" action=""> <input type="hidden"  name="id" value="<%=data[i].id%>"><input type="submit" value="Eiða"></form></td> <%}%>
+              <% if(admin){%> <td class="col-1"><form method="POST" action=""> <input type="hidden"  name="id" value="<%=data[i].id%>"><input class="delete-button" type="submit" value="Eiða"></form></td> <%}%>
             </tr>
            <% } %>
           </tbody>

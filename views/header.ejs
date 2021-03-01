@@ -8,10 +8,13 @@
 </head>
 <body>
   <header>
-    <% if(loggedIn){ %>
-      <a href="/logout">Logout</a>
-    <% }else{ %>
-      <a href="/login">Login</a>
-    <% } %>
+    <div class = "grid row login">
+      <% if(loggedIn){ %>
+        <p><a href="/logout">Logout</a></p>
+      <% }else{ %>
+        <div class =""><p><a href="/login">Login</a></p></div>
+      <% } %>
+    </div>
+    
     
   </header>

@@ -11,6 +11,24 @@ body {
   background-color: rgb(252, 244, 233);
 }
 
+header{
+  margin-top:1rem;
+  font-family: 'Times New Roman', Times, serif;
+  .login{
+    justify-content: flex-end;
+  }
+  p{
+    background-color: rgb(241, 215, 177);
+    border:2px transparent;
+    border-radius: 2px;
+    max-width: 100px;
+    padding:7px 15px;
+  }
+  p:hover{
+    background-color: rgb(240, 221, 195);
+  }
+}
+
 .input {
   display: flex;
   flex-direction: column;
@@ -81,6 +99,12 @@ body {
   h1 {
     font-family: 'Times New Roman', Times, serif;
     font-size: 36px;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  h3 {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 16px;
     margin-bottom: 2rem;
     text-align: center;
   }
@@ -92,6 +116,18 @@ body {
     border-collapse: collapse;
     padding: 0.5rem;
   }
+  .delete-button{
+    border: 1px solid rgba(124, 109, 89, 0.486);
+    border-radius: 4px;
+    font-size: 14px;
+    min-height: 1rem;
+    padding: 5px 15px;
+    width: fit-content;
+  }
+  .delete-button:hover{
+    background-color: whitesmoke;
+  }
+
 }
 
 .highlite-true {
@@ -127,4 +163,38 @@ body {
   display:flex;
   justify-content: space-evenly;
   margin-bottom: 2rem;
+}
+
+.login-page{
+  margin-top: 2rem;
+  h1{
+    text-align: center;
+  }
+  form{
+    display:flex;
+    flex-direction: column;
+  }
+  label{
+    margin:0.5rem 0;
+  }
+  input{
+    border: 1px solid rgba(124, 109, 89, 0.486);
+    border-radius: 4px;
+    height: 2rem;
+  }
+  .submit{
+    display: flex;
+    justify-content: center;
+  }
+  button{
+    width: fit-content;
+    padding: 0.5rem;
+    border: 1px solid rgba(124, 109, 89, 0.486);
+    border-radius: 4px;
+    font-size: 24px;
+  }
+}
+
+.admin{
+  text-align: center;
 }

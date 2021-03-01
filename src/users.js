@@ -11,8 +11,6 @@ async function comparePasswords(password, user) {
   return false;
 }
 
-// Merkjum sem async þó ekki verið að nota await, þar sem þetta er notað í
-// app.js gerir ráð fyrir async falli
 async function findByUsername(username) {
   const data = await query.select('SELECT * FROM users');
   const found = data.rows.find((u) => u.username === username);
@@ -23,8 +21,6 @@ async function findByUsername(username) {
   return null;
 }
 
-// Merkjum sem async þó ekki verið að nota await, þar sem þetta er notað í
-// app.js gerir ráð fyrir async falli
 async function findById(id) {
   const data = await query.select('SELECT * FROM users');
   const found = data.rows.find((u) => u.id === id);

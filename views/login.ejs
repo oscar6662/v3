@@ -7,14 +7,19 @@
   <title>Undirskriftarlisti</title>
 </head>
 <body>
-<main>
-<h1>Innskráning</h1>
-<form method="post" action="/login" autocomplete="off">
-  <label>Notendanafn: <input type="text" name="username"></label>
-  <label>Lykilorð: <input type="password" name="password"></label>
-  <button>Innskrá</button>
-</form>
-</main>
+  <main>
+    <div class ="login-page grid">
+      <h1>Innskráning</h1>
+      <form class ="col-6 grid" method="post" action="/login" autocomplete="off">
+          <label class ="row"><p class="col-2">Notendanafn: </p><input class="col-8" type="text" name="username"></label>
+          <label class ="row"><p class="col-2">Lykilorð: </p><input class="col-8" type="password" name="password"></label>
+          <div class="submit">
+            <button>Innskrá</button>
+          </div>
+        
+      </form>
+    </div>
+  </main>
 <%- include('footer') -%>
 </body>
 </html>
